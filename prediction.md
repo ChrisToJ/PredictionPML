@@ -1,3 +1,9 @@
+---
+title: Prediction of physical exercise performance using accelerometer data
+author: ChrisToJ
+layout: post
+---
+
 Prediction of physical exercise performance using accelerometer data
 ====
 
@@ -22,7 +28,7 @@ Here, we develop a machine learning algorithm to predict if weight lifting exerc
 performed correctly (Class A) or if errors occur during the exercise (Classes B to E).
 We compare a boosting and a random forest approach.
 We decide for the random forest and use a selected set of 16 features.
-We estimate the out of sample error of our model to be below 5%.
+We estimate the out of sample error of our model to be about 3%.
 
 <img class=center src=./figure/on-body-sensing-schema.png height=450>
 [Resource: Human Activity Recognition](http://groupware.les.inf.puc-rio.br/har)
@@ -131,7 +137,7 @@ cmp_features <- function(model, features, range, ...) {
     return(accuracy)
     }
 
-range <- c(50,100,200,400,800,1600)
+range <- c(50,100,200,400,800,1500)
 
 features1 <- grep("_x$|_y$|_z$", cols)
 acc1 <- cmp_features("gbm", c("classe", cols[features1]), range, verbose=F)
@@ -158,7 +164,7 @@ legend("bottomright", c("boosting:", "36 raw features","16 derived features",
 
 ![plot of chunk compare feature sets](figure/compare feature sets.png) 
 
-Our analysis shows that the set of 16 features outperforms the set of 36 raw features for large sample sizes.
+Our analysis shows that the set of 16 features performs better than the set of 36 raw features for larger sample sizes.
 Furthermore the random forest seems to perform slightly better than boosting.
 We therefore use these 16 features together with a random sample of 5000 observations from the
 training set to generate our final prediction model. Again, the choice of taking only 5000 observations is 
@@ -189,9 +195,9 @@ modelFit
 ## Resampling results across tuning parameters:
 ## 
 ##   mtry  Accuracy  Kappa  Accuracy SD  Kappa SD
-##    2    1.0       1.0    0.006        0.007   
+##    2    1.0       1.0    0.005        0.006   
 ##    9    1.0       0.9    0.005        0.006   
-##   16    0.9       0.9    0.007        0.009   
+##   16    0.9       0.9    0.007        0.008   
 ## 
 ## Accuracy was used to select the optimal model using  the largest value.
 ## The final value used for the model was mtry = 2.
@@ -209,14 +215,14 @@ modelFit$finalModel
 ##                      Number of trees: 500
 ## No. of variables tried at each split: 2
 ## 
-##         OOB estimate of  error rate: 2.98%
+##         OOB estimate of  error rate: 2.68%
 ## Confusion matrix:
 ##      A   B   C   D   E class.error
-## A 1372   5   4   5   0     0.01010
-## B   22 931  18   7   5     0.05290
-## C    0  14 846  18   0     0.03645
-## D    3   1  19 798   2     0.03038
-## E    1   8   9   8 904     0.02796
+## A 1403   5   2   7   2     0.01128
+## B   19 935  16   1   5     0.04201
+## C    0  19 810  13   0     0.03800
+## D    0   1  23 815   1     0.02976
+## E    2   3   5  10 903     0.02167
 ```
 
 ```r
@@ -236,35 +242,35 @@ cM
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 1110    3    2    1    0
-##          B   24  707   21    6    1
-##          C    1   22  647   14    0
-##          D    1    0   21  619    2
-##          E    1    7    7    9  697
+##          A 1111    2    1    2    0
+##          B   21  710   22    5    1
+##          C    0   17  653   14    0
+##          D    1    0   19  620    3
+##          E    1    3    6   10  701
 ## 
 ## Overall Statistics
 ##                                         
-##                Accuracy : 0.964         
-##                  95% CI : (0.957, 0.969)
-##     No Information Rate : 0.29          
+##                Accuracy : 0.967         
+##                  95% CI : (0.961, 0.973)
+##     No Information Rate : 0.289         
 ##     P-Value [Acc > NIR] : < 2e-16       
 ##                                         
-##                   Kappa : 0.954         
-##  Mcnemar's Test P-Value : 1.11e-05      
+##                   Kappa : 0.959         
+##  Mcnemar's Test P-Value : 0.000116      
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity             0.976    0.957    0.927    0.954    0.996
-## Specificity             0.998    0.984    0.989    0.993    0.993
-## Pos Pred Value          0.995    0.931    0.946    0.963    0.967
-## Neg Pred Value          0.990    0.990    0.984    0.991    0.999
-## Prevalence              0.290    0.188    0.178    0.165    0.178
-## Detection Rate          0.283    0.180    0.165    0.158    0.178
+## Sensitivity             0.980    0.970    0.932    0.952    0.994
+## Specificity             0.998    0.985    0.990    0.993    0.994
+## Pos Pred Value          0.996    0.935    0.955    0.964    0.972
+## Neg Pred Value          0.992    0.993    0.985    0.991    0.999
+## Prevalence              0.289    0.187    0.179    0.166    0.180
+## Detection Rate          0.283    0.181    0.166    0.158    0.179
 ## Detection Prevalence    0.284    0.193    0.174    0.164    0.184
-## Balanced Accuracy       0.987    0.970    0.958    0.973    0.994
+## Balanced Accuracy       0.989    0.977    0.961    0.973    0.994
 ```
-The accuracy of our final model is about 96% and 
+The accuracy of our final model is about 97% and 
 the estimated out of sample error rate is 3%.
 Including more observations and features could probably improve the model further.
 

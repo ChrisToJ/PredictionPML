@@ -1,3 +1,9 @@
+---
+title: Prediction of physical exercise performance using accelerometer data
+author: ChrisToJ
+layout: post
+---
+
 Prediction of physical exercise performance using accelerometer data
 ====
 
@@ -22,7 +28,7 @@ Here, we develop a machine learning algorithm to predict if weight lifting exerc
 performed correctly (Class A) or if errors occur during the exercise (Classes B to E).
 We compare a boosting and a random forest approach.
 We decide for the random forest and use a selected set of 16 features.
-We estimate the out of sample error of our model to be below 5%.
+We estimate the out of sample error of our model to be about 3%.
 
 <img class=center src=./figure/on-body-sensing-schema.png height=450>
 [Resource: Human Activity Recognition](http://groupware.les.inf.puc-rio.br/har)
@@ -96,7 +102,7 @@ cmp_features <- function(model, features, range, ...) {
     return(accuracy)
     }
 
-range <- c(50,100,200,400,800,1600)
+range <- c(50,100,200,400,800,1500)
 
 features1 <- grep("_x$|_y$|_z$", cols)
 acc1 <- cmp_features("gbm", c("classe", cols[features1]), range, verbose=F)
@@ -121,7 +127,7 @@ legend("bottomright", c("boosting:", "36 raw features","16 derived features",
        col=c(NA,"blue","red"), lwd=2, lty=c(NA,2,2,NA,1,1), bty="n")
 ```
 
-Our analysis shows that the set of 16 features outperforms the set of 36 raw features for large sample sizes.
+Our analysis shows that the set of 16 features performs better than the set of 36 raw features for larger sample sizes.
 Furthermore the random forest seems to perform slightly better than boosting.
 We therefore use these 16 features together with a random sample of 5000 observations from the
 training set to generate our final prediction model. Again, the choice of taking only 5000 observations is 
